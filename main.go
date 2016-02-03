@@ -33,7 +33,7 @@ func handlerFunc(w http.ResponseWriter, r *http.Request) {
 			if decode_err != nil {
 				log.Fatal(decode_err)
 			}
-			
+			dbInsert(newevent)
 	 	case "PUT":
 	 		w.Write([]byte("put\n"))
 		case "DELETE":
