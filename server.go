@@ -10,6 +10,9 @@ import (
 var eventStore EventStorer = NewSimpleEventStore()
 var diningStore DiningStorer = NewSimpleDiningStore()
 
+/**
+* Handler Function for a 'GET' and 'POST' request for getting all the events or posting an event.
+*/
 func handleEvent(w http.ResponseWriter, r *http.Request) {
   w.Header().Set("Access-Control-Allow-Origin", "*")
   fmt.Println("Recieved event HTTP")
@@ -24,7 +27,9 @@ func handleEvent(w http.ResponseWriter, r *http.Request) {
   }
 }
 
-
+/**
+* Handler Function for a 'GET' request returning the food for the specific college given.
+*/
 func handleDiningCollege(w http.ResponseWriter, r *http.Request) {
   w.Header().Set("Access-Control-Allow-Origin", "*")
   fmt.Println("Recieved dining HTTP")
@@ -46,6 +51,9 @@ func handleDiningCollege(w http.ResponseWriter, r *http.Request) {
   }
 }
 
+/**
+* Handler Function for a 'GET' request returning the names of all the colleges.
+*/
 func handleDiningAll(w http.ResponseWriter, r *http.Request) {
   w.Header().Set("Access-Control-Allow-Origin", "*")
   fmt.Println("Recieved dining HTTP")
