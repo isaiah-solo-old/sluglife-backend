@@ -4,6 +4,7 @@ import (
   "encoding/json"
   "net/http"
   "fmt"
+  "container/list"
 )
 
 var eventStore EventStorer = NewSimpleEventStore()
@@ -24,38 +25,49 @@ func handleEvent(w http.ResponseWriter, r *http.Request) {
 }
 
 
-func handleDining(w http.ResponseWriter, r *http.Request) {
+func handleDiningCollege(w http.ResponseWriter, r *http.Request) {
   w.Header().Set("Access-Control-Allow-Origin", "*")
   fmt.Println("Recieved dining HTTP")
   collegeFood := ""
   if r.Method == "GET" {
     data, _ := diningStore.GetAll();
-    jsonDat, _ := json.Marshal(data)
 
-    byt := []byte(jsonDat)
-    var dat []map[string]interface{}
-
-    if err := json.Unmarshal(byt, &dat); err != nil{
-      panic(err)
-    } 
-    fmt.Println(dat)
-
-    for i := 0; i < len(dat); i+=1{
-      if dat[i]["name"].(string) == r.FormValue("collegeName") {
-        collegeFood = dat[i]["items"].(string)
+    for i := 0; i < len(data); i+=1{
+      if data[i].CollegeName == r.FormValue("collegeName") {
+        collegeFood = data[i].Food
         break
       }
     }
 
-    jsonDat, _ = json.Marshal(collegeFood)
+    jsonDat, _ := json.Marshal(collegeFood)
     w.Write(jsonDat)
   } else {
     w.WriteHeader(404)
   }
 }
 
+func handleDiningAll(w http.ResponseWriter, r *http.Request) {
+  w.Header().Set("Access-Control-Allow-Origin", "*")
+  fmt.Println("Recieved dining HTTP")
+  collegeNames := list.New()
+  if r.Method == "GET" {
+    data, _ := diningStore.GetAll();
+
+    for i := 0; i < len(data); i+=1{
+      collegeNames.PushBack(data[i].CollegeName)
+    }
+
+    jsonDat, _ := json.Marshal(collegeNames)
+    w.Write(jsonDat)
+  } else {
+    w.WriteHeader(404)
+  }
+}
+
+
 func main() {
-  //http.HandleFunc("/event", handleEvent);
-  http.HandleFunc("/dining", handleDining);
+  http.HandleFunc("/event", handleEvent);
+  http.HandleFunc("/dining/college", handleDiningCollege);
+  http.HandleFunc("/dining/all", handleDiningAll);
   http.ListenAndServe(":8080", nil)
 }
