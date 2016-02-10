@@ -16,9 +16,9 @@ func eventStorerTests(t *testing.T, store EventStorer) {
   }
 
   expected := []Event {
-      Event{name: "a", summary: "d"},
-      Event{name: "b", summary: "e"},
-      Event{name: "c", summary: "f"},
+      Event{Name: "a", Summary: "d"},
+      Event{Name: "b", Summary: "e"},
+      Event{Name: "c", Summary: "f"},
     }
 
   for _, value := range expected {
@@ -26,7 +26,9 @@ func eventStorerTests(t *testing.T, store EventStorer) {
   }
 
   events, _ := store.GetAll()
-  containSameValues([]interface{}(events, expected)
+  if !containSameValues([]interface{}{events}, []interface{}{expected}) {
+    t.Fatalf("GetAll does not return expected events")
+  }
 }
 
 func containSameValues(this, that []interface{}) bool {
