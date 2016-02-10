@@ -11,12 +11,3 @@ func NewEvent(name, summary string) Event {
       Summary: summary,
     }
 }
-/*
-func (e Event) Name() string {
-  return e.Name
-}
-
-func (e Event) Summary() string {
-  return e.Summary
-}
-*/

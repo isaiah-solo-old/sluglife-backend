@@ -10,7 +10,8 @@ func TestSimpleEventStorer(t *testing.T) {
 }
 
 func eventStorerTests(t *testing.T, store EventStorer) {
-  if store.GetAll() != []Event{} {
+  initEvents, _ := store.GetAll()
+  if !reflect.DeepEqual(initEvents, []Event{}) {
     t.Fatalf("Invalid start state")
   }
 
@@ -24,12 +25,28 @@ func eventStorerTests(t *testing.T, store EventStorer) {
     store.Put(value)
   }
 
+  events, _ := store.GetAll()
+  containSameValues([]interface{}(events, expected)
 }
 
-func containSameValues(this []interface, that []interface) {
+func containSameValues(this, that []interface{}) bool {
+  if len(this) != len(that) {
+    return false
+  }
 
+  for _, value := range this {
+    if !contains(that, value) {
+      return false
+    }
+  }
+  return true
 }
 
-func contains(haystack []interface{}, needle interface{}) {
-
+func contains(haystack []interface{}, needle interface{}) bool {
+  for _, value := range haystack {
+    if reflect.DeepEqual(value, needle) {
+      return true
+    }
+  }
+  return false
 }
