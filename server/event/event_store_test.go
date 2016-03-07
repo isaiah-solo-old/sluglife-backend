@@ -1,15 +1,15 @@
-package main
+package event
 
 import (
   "reflect"
   "testing"
 )
 
-func TestSimpleEventStorer(t *testing.T) {
-  eventStorerTests(t, NewSimpleEventStore())
+func TestSimpleStorer(t *testing.T) {
+  eventStorerTests(t, NewSimpleStore())
 }
 
-func eventStorerTests(t *testing.T, store EventStorer) {
+func eventStorerTests(t *testing.T, store Storer) {
   initEvents, _ := store.GetAll()
   if !reflect.DeepEqual(initEvents, []Event{}) {
     t.Fatalf("Invalid start state")
