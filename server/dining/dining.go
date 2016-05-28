@@ -13,11 +13,11 @@ const (
 
 var (
 	dhalls = []diningId{
-		{"Cowell", "05"},
+		{"Cowell & Stevenson", "05"},
 		{"Crown & Merill", "20"},
-		{"Porter", "25"},
-		{"College Eight", "30"},
-		{"College Nine & Ten", "40"},
+		{"Porter & Kresge", "25"},
+		{"College Eight & Oakes", "30"},
+		{"College Nine & College Ten", "40"},
 	}
 )
 
