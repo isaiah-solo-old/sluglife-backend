@@ -1,6 +1,6 @@
 {
-	"ImportPath": "github.com/isayyuhh-s/sluglife-backend/tree/develop",
-	"GoVersion": "go1.6",
-	"Packages": [],
+	"ImportPath": ".",
+	"GoVersion": "go1.5",
+	"GodepVersion": "v74",
 	"Deps": []
 }
