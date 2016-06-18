@@ -10,5 +10,5 @@ import (
 
 func main() {
   fmt.Printf("Listening...\n")
-  http.ListenAndServe(":8080", server.New(event.NewSimpleStore()), server.New(maps.NewSimpleStore()))
+  http.ListenAndServe(":8080", server.New(event.NewSimpleStore(), maps.NewSimpleStore()))
 }
