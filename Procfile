@@ -1,1 +1,1 @@
-web: sluglife-backend -port=$PORT
+web: sluglife-backend
