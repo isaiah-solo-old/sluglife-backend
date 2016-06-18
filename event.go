@@ -3,12 +3,14 @@ package main
 type Event struct {
   Name string `json:"name"`
   Summary string `json:"summary"`
+  Image string `json:"image"`
 }
 
-func NewEvent(name, summary string) Event {
+func NewEvent(name string, summary string, image string) Event {
   return Event {
       Name: name,
       Summary: summary,
+      Image: image,
     }
 }
 /*

@@ -10,6 +10,7 @@ import (
 type Event struct {
 	Name string `json:"name"`
 	Description string `json:"description"`
+	Image string `json:"image"`
 }
 
 func handlerFunc(w http.ResponseWriter, r *http.Request) {

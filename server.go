@@ -12,7 +12,7 @@ func handleEvent(w http.ResponseWriter, r *http.Request) {
   w.Header().Set("Access-Control-Allow-Origin", "*")
   fmt.Println("Recieved event HTTP")
   if r.Method == "POST" {
-    event := NewEvent(r.FormValue("name"), r.FormValue("description"))
+    event := NewEvent(r.FormValue("name"), r.FormValue("description"), r.FormValue("image"))
     fmt.Printf("%+v\n", event)
     store.Put(event)
   } else {
