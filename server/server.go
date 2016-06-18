@@ -23,7 +23,7 @@ type Server struct {
   mx mux.Mux
 }
 
-func New(eventStore event.Storer, mapStore map,Storer) Server {
+func New(eventStore event.Storer, mapStore map.Storer) Server {
   server := Server {
       eventStore: eventStore,
       diningJob: dining.NewJob(defaultDiningTimeStep),
