@@ -66,6 +66,7 @@ func (server Server) postEvent(w http.ResponseWriter, r *http.Request) {
   // Escapes the strings to avoid XSS attacks
   name := template.HTMLEscapeString(r.FormValue("name"))
   desc := template.HTMLEscapeString(r.FormValue("description"))
+  image := template.HTMLEscapeString(r.FormValue("image"))
   if name == "" {
     w.WriteHeader(400)
     w.Write([]byte("Name parameter not provided"))
@@ -76,10 +77,16 @@ func (server Server) postEvent(w http.ResponseWriter, r *http.Request) {
     w.Write([]byte("Description parameter not provided"))
     return
   }
+  if image == "" {
+    w.WriteHeader(400)
+    w.Write([]byte("Image parameter not provided"))
+    return
+  }
 
   putErr := server.eventStore.Put(event.Event{
       Name: name,
       Summary: desc,
+      Image: image,
     })
   if putErr != nil {
     w.WriteHeader(500)
