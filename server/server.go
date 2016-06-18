@@ -4,6 +4,7 @@ import (
   "encoding/json"
   "net/http"
   "./event"
+  "./map"
   "./mux"
   "./dining"
   "html/template"
@@ -18,15 +19,18 @@ const (
 type Server struct {
   eventStore event.Storer
   diningJob dining.Job
+  mapStore maps.Storer
   mx mux.Mux
 }
 
-func New(eventStore event.Storer) Server {
+func New(eventStore event.Storer, mapStore maps.Storer) Server {
   server := Server {
       eventStore: eventStore,
       diningJob: dining.NewJob(defaultDiningTimeStep),
+      mapStore: mapStore,
     }
   mx := mux.New()
+
   mx.BindFn(mux.Endpoint {
       Method: "POST",
       Path: "/event",
@@ -36,6 +40,11 @@ func New(eventStore event.Storer) Server {
       Method: "GET",
       Path: "/event",
     }, server.getEvents)
+
+  mx.BindFn(mux.Endpoint {
+      Method: "GET",
+      Path: "/map",
+    }, server.getMaps)
 
   mx.BindFn(mux.Endpoint {
       Method: "GET",
@@ -66,6 +75,7 @@ func (server Server) postEvent(w http.ResponseWriter, r *http.Request) {
   // Escapes the strings to avoid XSS attacks
   name := template.HTMLEscapeString(r.FormValue("name"))
   desc := template.HTMLEscapeString(r.FormValue("description"))
+  image := template.HTMLEscapeString(r.FormValue("image"))
   if name == "" {
     w.WriteHeader(400)
     w.Write([]byte("Name parameter not provided"))
@@ -76,10 +86,16 @@ func (server Server) postEvent(w http.ResponseWriter, r *http.Request) {
     w.Write([]byte("Description parameter not provided"))
     return
   }
+  if image == "" {
+    w.WriteHeader(400)
+    w.Write([]byte("Image parameter not provided"))
+    return
+  }
 
   putErr := server.eventStore.Put(event.Event{
       Name: name,
       Summary: desc,
+      Image: image,
     })
   if putErr != nil {
     w.WriteHeader(500)
@@ -103,6 +119,23 @@ func (server Server) getEvents(w http.ResponseWriter, r *http.Request) {
     return
   }
   w.Write(eventsJson)
+}
+
+func (server Server) getMaps(w http.ResponseWriter, r *http.Request) {
+  maps, getErr := server.mapStore.GetAll()
+  if getErr != nil {
+    w.WriteHeader(500)
+    w.Write([]byte("Server failed to get locations"))
+    return
+  }
+
+  mapsJson, jsonErr := json.Marshal(maps)
+  if jsonErr != nil {
+    w.WriteHeader(500)
+    w.Write([]byte("Failed to turn locations into JSON"))
+    return
+  }
+  w.Write(mapsJson)
 }
 
 func (server Server) getDiningHalls(w http.ResponseWriter, r *http.Request) {

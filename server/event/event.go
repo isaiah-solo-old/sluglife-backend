@@ -4,4 +4,5 @@ package event
 type Event struct {
   Name string `json:"name"`
   Summary string `json:"summary"`
+  Image string `json:"image"`
 }
