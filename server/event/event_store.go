@@ -7,4 +7,6 @@ type Storer interface {
   Put(e Event) error
   // GetAll retrieves all events
   GetAll() ([]Event, error)
+  // Delete an event from storage
+  Delete(s string) error
 }
