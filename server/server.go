@@ -84,11 +84,17 @@ func (server Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 func (server Server) postEvent(w http.ResponseWriter, r *http.Request) {
   // Escapes the strings to avoid XSS attacks
   name := template.HTMLEscapeString(r.FormValue("name"))
+  date := template.HTMLEscapeString(r.FormValue("date"))
   desc := template.HTMLEscapeString(r.FormValue("description"))
   image := template.HTMLEscapeString(r.FormValue("image"))
   if name == "" {
     w.WriteHeader(400)
     w.Write([]byte("Name parameter not provided"))
+    return
+  }
+  if date == "" {
+    w.WriteHeader(400)
+    w.Write([]byte("Date parameter not provided"))
     return
   }
   if desc == "" {
@@ -104,6 +110,7 @@ func (server Server) postEvent(w http.ResponseWriter, r *http.Request) {
 
   putErr := server.eventStore.Put(event.Event{
       Name: name,
+      Date: date,
       Summary: desc,
       Image: image,
     })
