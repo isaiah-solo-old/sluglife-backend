@@ -24,3 +24,14 @@ func (store *simpleStore) Put(e Event) error {
 func (store *simpleStore) GetAll() ([]Event, error) {
   return store.events, nil
 }
+
+// Put adds the event into storage, and never returns an error.
+func (store *simpleStore) Delete(s string) error {
+  for index,event := range store.events {
+    if(event.Name == s) {
+      store.events = append(store.events[:index], store.events[index + 1:]...)
+      return nil
+    }
+  }
+  return nil
+}

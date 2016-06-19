@@ -42,6 +42,11 @@ func New(eventStore event.Storer, mapStore maps.Storer) Server {
     }, server.getEvents)
 
   mx.BindFn(mux.Endpoint {
+      Method: "DELETE",
+      Path: "/event",
+    }, server.deleteEvent)
+
+  mx.BindFn(mux.Endpoint {
       Method: "POST",
       Path: "/map",
     }, server.postMaps)  
@@ -105,6 +110,23 @@ func (server Server) postEvent(w http.ResponseWriter, r *http.Request) {
   if putErr != nil {
     w.WriteHeader(500)
     w.Write([]byte("Server failed to store event"))
+    return
+  }
+}
+
+func (server Server) deleteEvent(w http.ResponseWriter, r *http.Request) {
+  // Escapes the strings to avoid XSS attacks
+  name := template.HTMLEscapeString(r.FormValue("name"))
+  if name == "" {
+    w.WriteHeader(400)
+    w.Write([]byte("Name parameter not provided"))
+    return
+  }
+
+  deleteErr := server.eventStore.Delete(name)
+  if (deleteErr != nil) {
+    w.WriteHeader(500)
+    w.Write([]byte("Server failed to delete event"))
     return
   }
 }
