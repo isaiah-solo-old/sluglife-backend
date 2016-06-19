@@ -42,6 +42,11 @@ func New(eventStore event.Storer, mapStore maps.Storer) Server {
     }, server.getEvents)
 
   mx.BindFn(mux.Endpoint {
+      Method: "POST",
+      Path: "/map",
+    }, server.postMaps)  
+
+  mx.BindFn(mux.Endpoint {
       Method: "GET",
       Path: "/map",
     }, server.getMaps)
@@ -119,6 +124,39 @@ func (server Server) getEvents(w http.ResponseWriter, r *http.Request) {
     return
   }
   w.Write(eventsJson)
+}
+
+func (server Server) postMaps(w http.ResponseWriter, r *http.Request) {
+  // Escapes the strings to avoid XSS attacks
+  name := template.HTMLEscapeString(r.FormValue("name"))
+  longitude := template.HTMLEscapeString(r.FormValue("longitude"))
+  latitude := template.HTMLEscapeString(r.FormValue("latitude"))
+  if name == "" {
+    w.WriteHeader(400)
+    w.Write([]byte("name parameter not provided"))
+    return
+  }
+  if longitude == "" {
+    w.WriteHeader(400)
+    w.Write([]byte("longitude parameter not provided"))
+    return
+  }
+  if latitude == "" {
+    w.WriteHeader(400)
+    w.Write([]byte("latitude parameter not provided"))
+    return
+  }
+
+  putErr := server.mapStore.Put(maps.Map{
+      Name: name,
+      Longitude: longitude,
+      Latitude: latitude,
+    })
+  if putErr != nil {
+    w.WriteHeader(500)
+    w.Write([]byte("Server failed to store location"))
+    return
+  }
 }
 
 func (server Server) getMaps(w http.ResponseWriter, r *http.Request) {
