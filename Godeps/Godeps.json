@@ -1,0 +1,19 @@
+{
+	"ImportPath": "github.com/PuerkitoBio/goquery",
+	"GoVersion": "go1.5",
+	"GodepVersion": "v74",
+	"Deps": [
+		{
+			"ImportPath": "github.com/andybalholm/cascadia",
+			"Rev": "3ad29d1ad1c4f2023e355603324348cf1f4b2d48"
+		},
+		{
+			"ImportPath": "golang.org/x/net/html",
+			"Rev": "1961d9def2b2d7a28d7958926d2457d05a178ecd"
+		},
+		{
+			"ImportPath": "golang.org/x/net/html/atom",
+			"Rev": "1961d9def2b2d7a28d7958926d2457d05a178ecd"
+		}
+	]
+}
